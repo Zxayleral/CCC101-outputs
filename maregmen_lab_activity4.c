@@ -110,6 +110,9 @@ void print_array(double arr[], int size) {
 	printf("{");
 	for (int i = 0; i<size; i++) {
 		printf(" %.1lf", arr[i]);
+		if(!(i==size-1)) {
+			printf(",");
+		}
 	}
 	printf(" }");
 }
