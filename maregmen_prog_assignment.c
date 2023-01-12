@@ -3,53 +3,52 @@
 #include<stdlib.h>  
 #include<time.h> 
 #include<string.h>
+
 #define supported_symbols "!@#$%^&*()-_+={}[]<>?"
 #define smol_letters "abcdefghijklmnopqrstuvwxyz"
 #define numbers "1234567890"
-#define big_letters strupr(smol_letters)
+#define big_letters "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 #define minChar 8
- 
-//You can use this function to get a random number from min to max
-int randint();
-void generatePassword();
-char generateCharacters();
 
-int main() 
+void generatePassword();
+int randInt();
+
+
+int main(void) 
 {   
-    int a, t;
-    char password[50];
     srand(time(0));
+
+    int len, t;
     do {
-        printf("Enter password length");
-        scanf("%d", &a);
-        if(a<=minChar) {
-            password[a] = '\0';
-            generatePassword(a, &password);
-            printf("%s", password);
-        }
-    } while (t!=0);
-    
+        do {
+            printf("Enter password length: ");
+            scanf("%d", &len);
+            if (len>=minChar) {
+                generatePassword(len);
+            }
+            else {
+                printf("Password length must be atleast 8.\n");
+                continue;
+            }
+        } while(len < 8);
+        printf("Press 1 to try again: ");
+        scanf("%d", &t);
+    } while(t==1);
 } 
 
+void generatePassword(int len) {
+    char password[len];
+    for(int i = 0; i < len; i++) {
+        int ch = randInt(1, 4); // this variable will contain a number between 1 and 4, and we can use it for randomizing what type of character to create
+        if (ch==1) password[i] = smol_letters[randInt(0, 25)];
+        if (ch==2) password[i] = big_letters[randInt(0, 25)];
+        if (ch==3) password[i] = supported_symbols[randInt(0, 20)];
+        if (ch==4) password[i] = numbers[randInt(0, 9)];
+    } 
+    printf("Password generated %s \n", password);
+}
 
 int randInt(int min, int max) {
     int random_number = rand() % max + min;
     return random_number;
-}
-
-char generateCharacters(int ln, char* chars[]) {
-    
-    char fuck[ln];
-
-    for(int i = 0; i < ln; i++) {
-        fuck[i] = chars[rand() % strlen(chars)];
-    }
-}
-
-void generatePassword(int len, char* passwd[]) {
-    int char_per_type = len/4, excess = len%4;
-    strcat(passwd, generateCharacters(char_per_type, smol_letters));
-    strcat(passwd, generateCharacters(char_per_type, supported_symbols));
-    strcat(passwd, generateCharacters(char_per_type, numbers));
-    strcat(passwd, generateCharacters(char_per_type, big_letters));
 }
